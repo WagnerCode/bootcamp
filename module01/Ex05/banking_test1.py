@@ -17,6 +17,7 @@ if __name__ == "__main__":
         other='This is the vice president of the corporation'
     ))
 
+
     if bank.transfer('William John', 'Smith Jane', 545.0) is False:
         print('Failed')
     else:
