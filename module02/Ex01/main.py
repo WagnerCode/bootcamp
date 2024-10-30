@@ -1,10 +1,19 @@
-def what_are_the_vars(**kwargs):
+def what_are_the_vars(*args, **kwargs):
     example = ObjectC()
 
-    for arg in zip(kwargs):
-        print(arg)
-        #setattr(example, f'{arg}')
+    if kwargs:
+        for kwarg in kwargs:
+            setattr(example, f'{kwarg}', kwargs[kwarg])
 
+    if args:
+        i = 0
+        for arg in args:
+            if hasattr(example, f'var_{i}'):
+                return None
+            setattr(example, f'var_{i}', arg)
+            i += 1
+
+    return example
 
 
 class ObjectC(object):
