@@ -12,8 +12,10 @@ def log(funk):
         funk(*args, **kwargs)
 
         end = time.time()
-
-        s = f"(cmaxime)Running: {funk.__name__}\t[ exec-time = {(end - begin) * 10**3}] \n"
+        if funk.__name__ == "add_water":
+            s = f"(cmaxime)Running: {funk.__name__}\t\t[ exec-time = {(end - begin) * 10**3}] \n"
+        else:
+            s = f"(cmaxime)Running: {funk.__name__}\t[ exec-time = {(end - begin) * 10 ** 3}] \n"
         file.write(s)
 
         file.close()
