@@ -3,9 +3,12 @@ import logging
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters.command import Command
-from aiogram.enums.dice_emoji import DiceEmoji
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
+from aiogram.utils.formatting import (
+    Bold, as_list, as_marked_section, as_key_value, HashTag
+)
+
 
 from config_reader import config
 
@@ -24,9 +27,32 @@ dp = Dispatcher()
 async def cmd_start(message: types.Message):
     await message.answer("<u>Hello David!</u>")
 
-@dp.message(Command("dice"))
-async def cmd_dice(message: types.Message):
-    await message.answer_dice(emoji=DiceEmoji.DICE)
+@dp.message(Command("advanced_example"))
+async def cmd_advanced_example(message: types.Message):
+    content = as_list(
+        as_marked_section(
+            Bold("Success:"),
+            "Test 1",
+            "Test 3",
+            "Test 4",
+            marker="✅ ",
+        ),
+        as_marked_section(
+            Bold("Failed:"),
+            "Test 2",
+            marker="❌ ",
+        ),
+        as_marked_section(
+            Bold("Summary:"),
+            as_key_value("Total", 4),
+            as_key_value("Success", 3),
+            as_key_value("Failed", 1),
+            marker="  ",
+        ),
+        HashTag("#test"),
+        sep="\n\n",
+    )
+    await message.answer(**content.as_kwargs())
 
 @dp.message(Command("add_to_list"))
 async def cmd_add_to_list(message: types.Message, mylist: list[int]):
@@ -37,6 +63,7 @@ async def cmd_add_to_list(message: types.Message, mylist: list[int]):
 async def cmd_show_list(message: types.Message, mylist: list[int]):
     await message.answer(f"Ваш список: {mylist}")
 
+@dp.message
 
 # Запуск процесса поллинга новых апдейтов
 async def main():
