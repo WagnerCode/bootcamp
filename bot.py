@@ -8,7 +8,8 @@ from aiogram.enums import ParseMode
 from aiogram.utils.formatting import (
     Bold, as_list, as_marked_section, as_key_value, HashTag
 )
-
+from aiogram import F
+from aiogram import html
 
 from config_reader import config
 
@@ -63,7 +64,24 @@ async def cmd_add_to_list(message: types.Message, mylist: list[int]):
 async def cmd_show_list(message: types.Message, mylist: list[int]):
     await message.answer(f"Ваш список: {mylist}")
 
-@dp.message
+@dp.message(F.text)
+async def extract_date(message: types.Message):
+    data = {
+        "url": "<N/A>",
+        "email": "<N/A>",
+
+    }
+
+    entities = message.entities or []
+    for item in entities:
+        if item.type in data.keys():
+            data[item.type] = item.extract_from(message.text)
+    await message.reply(
+        "Вот что я нашел:\n"
+        f"URL: {html.quote(data['url'])}\n"
+        f"E-mail: {html.quote(data['email'])}\n"
+    )
+
 
 # Запуск процесса поллинга новых апдейтов
 async def main():
